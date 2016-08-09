@@ -1,0 +1,45 @@
+{% extends "main/header.html" %}
+
+{% block content %}
+
+	   <div class="container">
+       <form class="" action="/consulta/" method="POST"> {% csrf_token %}
+			  <div class="form-group">
+                <label for="desde">Desde:</label>
+                <input type="date" class="form-control" name="desde">
+                <label for="hasta">Hasta:</label>
+                <input type="date" class="form-control" name="hasta">
+                <br>
+                <button id="search" class="btn btn-default">Buscar</button>
+        </div>
+       </form>
+		 </div>
+		 {% if fch %}
+		 	<p>Consulta desde  {{fch.0}} hasta el {{fch.1}}
+				<br>
+				Tiempo de ejecucion {{tiempo}}
+			</p>
+			<div class="table-responsive">
+			<table class="table">
+					<tr><th>Producto</th><th>Venta Total</th><th>Cantidad Vendida</th><th>Descripcion</th></tr>
+      {% for r in result %}
+			<tr>
+				{% for d in r%}
+				<td>{{d}}</td>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+		 {% endif %}
+		 <div class='container'>
+			 
+		 </div>
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function(){
+	$('a[href="/consulta"]').parent().addClass('active');
+})
+</script>
+{% endblock %}

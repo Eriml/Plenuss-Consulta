@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html ng-app="store" lang="en">
+
+<head>
+	<title>Avattia</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'main/css/bootstrap.min.css' %}" type = "text/css"/>
+	<link rel="stylesheet" href="{% static 'main/css/loading.css' %}" type="text/css" />
+
+
+</head>
+
+<body class="body" style="background-color:#f6f6f6">
+	<script src="{% static 'main/js/jquery.min.js' %}"></script>
+	<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
+	<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
+	<script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
+	<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
+	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
+
+
+
+
+	<div class="container-fluid" style="min-height:95%; " id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
+
+        <!--<div class="col-sm-4">
+          <ul class="nav nav-pills">
+        <li role="presentation" ng-class="{ active:tab === 1}"><a href ng-click="tab = 1">Home</a></li>
+        <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2">Profile</a></li>
+        <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3">Consulta</a></li>
+      </ul>
+  </div>-->
+  <nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="#">Avattia</a>
+	  </div>
+	  <div id="navbar" class="navbar-collapse collapse">
+		<ul class="nav navbar-nav">
+			<li role="presentation" ng-class="{ active:tab === 1}"><a href ng-click="tab = 1">Home</a></li>
+            <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2">Profile</a></li>
+            <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3">Consulta</a></li>
+		</ul>
+	  </div><!--/.nav-collapse -->
+	</div>
+  </nav>
+  	<div class="row">
+				  <center>
+				  <h3>Registro y Manejo de Informacion</h3>
+				  </center>
+		  <div class="col-md-10">
+
+				<div class='container' ng-show="tab === 1">
+					<center>
+						<p>Something in here</p>
+					</center>
+				</div>
+			</div>
+			</div>
+				<div ng-show="tab === 3">
+							<div class="container" id="tablas" ng-controller="ControladorFecha as control">
+								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
+										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
+								</button>
+								<!-- Single button -->
+							<!--	<div class="btn-group" ng-show="tablas.length">
+  									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    									Seleccione Tabla <span class="caret"></span>
+  									</button>
+  									<ul id="ddTablas" class="dropdown-menu">
+										{% verbatim %}
+										<li ng-repeat="tab in tablas"><a href>{{tab}}</a></li>
+										{% endverbatim %}
+  									</ul>
+								</div> -->
+								<select class="form-control" ng-show="tablas.length"  id="tablaSel">
+									<option ng-repeat="tab in tablas">{% verbatim %}{{tab}}{% endverbatim %}</option>
+								</select>
+								<button ng-click="control.searchColumns()" class='btn btn-success' ng-show="tablas.length">Buscar Columnas</button>
+								<div class="dropdown checkbox" ng-show="columns.length">
+  									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    								 	Seleccione las columnas
+    					 				<span class="caret"></span>
+  									</button>
+  									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										{% verbatim %}
+										<li ng-repeat="column in columns" class="tableColumn">
+											<input  type="checkbox"  value="{{column}}">
+	    										{{column}}
+			  								</input>
+										</li>
+										{% endverbatim %}
+  									</ul>
+
+								</div>
+
+							</div>
+
+						   <div ng-controller="ControladorFecha as control">
+					       		<form name="search" id="search" ng-submit="control.search()" > {% csrf_token %}
+								  	<div class="form-group">
+					                	<label for="desde">Desde:</label>
+					                	<input type="date" class="form-control" id="desde" required >
+					                	<label for="hasta">Hasta:</label>
+					                	<input type="date" class="form-control" id="hasta" required >
+					                	<br>
+					                	<button type="submit" class="btn btn-default" id='btnSearch'><span id="btnText">Buscar Tablas</span>
+											    <span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
+										</button>
+
+					        		</div>
+					       		</form>
+								<div class='table-responsive'>
+									{% verbatim %}
+
+									<table class="table" ng-show="tam !== 0 ">
+										<tr><th><a href ng-click="control.orderP()">Producto<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>
+
+										</a></th><th>Venta Total</th><th>Cantidad Vendida</th><th>Descripcion</th></tr>
+
+											<tr ng-repeat="prod in result"><td>{{prod.producto}}</td><td>{{prod.venta}}</td><td>{{prod.cantidad}}</td><td>{{prod.desc}}</td></tr>
+
+									</table>
+									{% endverbatim %}
+								</div>
+							</div>
+
+				</div>
+		  </div>
+
+	<footer>
+		<div class="container-fluid" style='margin-left:15px'>
+			<p><a href="#" target="blank">Contact</a> | <a href="#" target="blank">LinkedIn</a> | <a href="#" target="blank">Twitter</a> | <a href="#" target="blank">Google+</a></p>
+		</div>
+	</footer>
+
+</body>
+
+{% block script %}
+{% endblock %}
+</html>

@@ -1,0 +1,27 @@
+{% extends "main/header.html" %}
+{% block content %}
+
+	   <div class="container">
+			 <p>
+				 Tiempo = {{time}}
+			 </p>
+			 <table class="table">
+  		 	<tr><th>Venta</th><th>Cliente</th><th>Cantidad</th><th>Producto</th></tr>
+						{% for c in content%}
+						<tr>
+							{% for b in c%}
+								<td>{{b}}</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+			 </table>
+		 </div>
+
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function(){
+	$('a[href="/"]').parent().addClass('active');
+})
+</script>
+{% endblock %}
