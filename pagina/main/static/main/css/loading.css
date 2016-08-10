@@ -21,6 +21,27 @@ body {
     margin-left: 10px;
     padding-left: 15px;
 }
-nav{
-    margin-top: -2px;
+/*Cambia Tabs de barra*/
+.navbar-default{
+    margin-top: 0px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px 10px #999;
+}
+.navbar-default .navbar-brand {
+  color: #000;
+  background-color: #fff;
+  font-family: 'Righteous';
+}
+/*Cambiar Barra cuando se pasa el mouse
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #ffffff;
+  background-color: transparent;
+}*/
+/*Cambia el seleccionado*/
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #555;
+  background-color: #ff9e1c;
 }

@@ -22,18 +22,19 @@
 	<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
 	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
 
+	<style>
+	img.expand { width: 10em; }
+	@font-face {
+    font-family: 'Righteous'; /*a name to be used later*/
+    src: url('{% static 'main/fonts/Righteous.ttf' %}'); /*URL to font*/
+}
 
+	</style>
 
 
 	<div class="container-fluid" style="min-height:95%; " id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
 
-        <!--<div class="col-sm-4">
-          <ul class="nav nav-pills">
-        <li role="presentation" ng-class="{ active:tab === 1}"><a href ng-click="tab = 1">Home</a></li>
-        <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2">Profile</a></li>
-        <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3">Consulta</a></li>
-      </ul>
-  </div>-->
+
   <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
 	  <div class="navbar-header">
@@ -43,7 +44,7 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="#">Avattia</a>
+		<a class="navbar-brand" href="#"><p><img style="min-width:100px;min-height: 28px;max-width: 165px;max-height: 45px;margin-top: -10px;" src="{% static 'main/pics/Logo.png' %}"  class="img"/>Plenuss</p></a>
 	  </div>
 	  <div id="navbar" class="navbar-collapse collapse">
 		<ul class="nav navbar-nav">
@@ -51,8 +52,8 @@
             <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2">Profile</a></li>
             <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3">Consulta</a></li>
 		</ul>
-		<form class="navbar-form navbar-right" action="/logout">
-			{{user}}
+		<form class="navbar-form navbar-right" action="/logout" >
+			<font style="font-family: 'Righteous';">{{user}}&nbsp;&nbsp;</font>
            <button type="submit" class="btn btn-danger">Cerrar Sesion</button>
          </form>
 	  </div><!--/.nav-collapse -->
@@ -76,17 +77,7 @@
 								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
-								<!-- Single button -->
-							<!--	<div class="btn-group" ng-show="tablas.length">
-  									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    									Seleccione Tabla <span class="caret"></span>
-  									</button>
-  									<ul id="ddTablas" class="dropdown-menu">
-										{% verbatim %}
-										<li ng-repeat="tab in tablas"><a href>{{tab}}</a></li>
-										{% endverbatim %}
-  									</ul>
-								</div> -->
+				
 								<select class="form-control" ng-show="tablas.length"  id="tablaSel">
 									<option ng-repeat="tab in tablas">{% verbatim %}{{tab}}{% endverbatim %}</option>
 								</select>
