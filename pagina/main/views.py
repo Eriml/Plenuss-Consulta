@@ -50,7 +50,7 @@ def index(request):
     if request.session.get('user'):
         return render(request, 'main/home.html',{'user':request.session.get('user')})
     else:
-        return render(request, 'main/auth.html' )
+        return render(request, 'main/auth.html',{'Error':False} )
 
 def contact(request):
     start = time.time()
@@ -131,7 +131,7 @@ def login(request):
                 request.session.set_expiry(1800)
                 return redirect("/")
             else:
-                return "No estas"
+                return render(request, 'main/auth.html',{'Error':True})
 
 def logout(request):
     del request.session['user']
