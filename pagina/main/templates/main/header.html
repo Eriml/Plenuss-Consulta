@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="store" lang="en" style="background-color: #0094ca;"">
+<html ng-app="store" lang="en" style="font-family:'Calibri';background-color: #fff;">
 
 <head>
-	<title>Plenuss</title>
+	<title>Plenuss - Consultas</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 
@@ -10,29 +10,11 @@
 	<link rel="stylesheet" href="{% static 'main/css/bootstrap.min.css' %}" type = "text/css"/>
 	<link rel="stylesheet" href="{% static 'main/css/loading.css' %}" type="text/css" />
 
-
-</head>
-
-<body class="body" style="background-color: #fff;">
-	<script src="{% static 'main/js/jquery.min.js' %}"></script>
-	<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
-	<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/dirPagination.js' %}"></script>
-	<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
-
 	<style>
 	img.expand { 
 		width: 10em; 
 	}
-	.body{
-		background-image: url({% static 'main/pics/wmark.png' %});
-		background-position: right 20px bottom 20px;
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-		background-size: 25%;
-	}
+	
 	#panel panel-primary {
     	background-size: 200px 500px;
 	}
@@ -46,26 +28,56 @@
   background-color: #efefef;
   text-align: center;
 	}
-	body {
+	.body {
+
         background-color:#eaeaea;
         max-width: 900px;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
-        padding-top: 100px; 
-        padding-bottom: 50px;
         padding: 100px 0px 0px 0px;
-        height:100%;
-        box-shadow: 0px 0px 2px 2px #999;
+        box-shadow: 0px 0px 6px 6px #999;
     }
+    html{
+    	background: #0682b2; /* fallback for old browsers */
+  		background: -webkit-linear-gradient(left, #ffe9cb, #fec578);
+  		background: -moz-linear-gradient(left, #ffe9cb, #fec578);
+  		background: -o-linear-gradient(left, #ffe9cb, #fec578);
+  		background: linear-gradient(to right, #ffe9cb, #fec578);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        max-width: 100%;
+        width:;
+    }
+    .row{
+    	height: 100%;}
+   .body{
+		background-image: url({% static 'main/pics/wmark.png' %});
+		background-position: right 20px bottom 20px;
+		background-repeat: no-repeat;
+		background-size: 25%;
+	}
 	</style>
 
+</head>
 
-<div class="container-fluid" style="min-height:95%; " id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
+<body class="body" style="padding-bottom: 100px;">
+	<script src="{% static 'main/js/jquery.min.js' %}"></script>
+	<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
+	<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
+	<script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
+	<script  type='text/javascript' src="{% static 'main/js/dirPagination.js' %}"></script>
+	<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
+	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
+
+
+
+
+<div class="container-fluid" id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
 
 
   <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
+	<div class="container" >
 	<!--Logo Plenuss-->
 	  <div class="navbar-header">
 		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -97,31 +109,32 @@
 
 				  </center>
 	<!--Pestana Home-->
-			<div class='container' ng-show="tab === 1">
-					<center>
-					<p>
-					<div class="panel-group">
-  				<div class="panel panel-primary" style="text-align: center;float: left;margin-bottom: 5px;word-wrap: break-word;display:inline-block;max-width: 500px;">
-    					<div class="panel-heading" style="font-family: 'Righteous'">DATOS DE LA EMPRESA</div>
+			<div class='container' ng-show="tab === 1" style="padding-left: 30px;padding-right:30px;max-width: 100%;">
+				<div class="panel-group" >
+  					<div class="panel panel-primary" style="text-align: center;float: left;margin-bottom: 5px;word-wrap: break-word;display:inline-block;max-width: 500px;">
+    					<div class="panel-heading" style="font-family: 'Righteous'">
+    						DATOS DE LA EMPRESA
+    					</div>
     					<div class="panel-body" style="text-align: left;padding-left: 23px;font-family: 'Calibri';">
-    					<div ><img src="{% static 'main/pics/Empresa.jpg' %}" style="max-width:200px;height:auto;text-align: center;" id="logo" /></div>
+    						<div >
+    							<img src="{% static 'main/pics/Empresa.jpg' %}" style="max-width:200px;height:auto;text-align: center;" id="logo" />
+    						</div>
     					<b>EMPRESA:</b> DISTRIBUIDORA DE ALIMENTOS IBARRA S DE RL DE CV<br>
     					<b>DIRECCION:</b> CARR SAN LUIS MOD CL 14 EJ. CUERNAVACA<br>
     					MEXICALI, BC<br>
     					<b>SUCURSAL:</b> CASH CARRY<br>
     					</div>
-				</div>
+					</div>
 <!--
 				<div class="panel panel-primary" style="text-align: center;float: left;margin-left:1px;margin-top: 0px;margin-bottom: 5px;display:inline-block;width: 50%;float: right;">
     					<div class="panel-heading">Panel Content</div>
     					<div class="panel-body">Panel Content</div>-->
 				</div>
-					</center>
 			</div>
 
 <!--Pestana Consulta-->
-				<div ng-show="tab === 3">
-					<div class="container" id="tablas" ng-controller="ControladorFecha as control">
+				<div ng-show="tab === 3" style="max-width: 100%;">
+					<div class="container" id="tablas" ng-controller="ControladorFecha as control" style="max-width: 100%;">
 								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
@@ -145,16 +158,17 @@
 										{% endverbatim %}
   									</ul>
 								</div>
+						</div>
 
 						
 
-						   <div ng-controller="ControladorFecha as control" class="row">
+						<div ng-controller="ControladorFecha as control" class="row" style="padding-left:30px;padding-right:30px;">
 					       		<form name="search" id="search" ng-submit="control.search()" > {% csrf_token %}
 								  	<div class="form-group col-md-4">
 					                	<label for="desde">Desde:</label>
-					                	<input type="date" class="form-control" id="desde" required >
+					                	<input type="date" class="form-control" id="desde" required/>
 					                	<label for="hasta">Hasta:</label>
-					                	<input type="date" class="form-control" id="hasta" required >
+					                	<input type="date" class="form-control" id="hasta" required/>
 					                	<br>
 					                	<button type="submit" class="btn btn-default" id='btnSearch'><span id="btnText">Buscar Tablas</span>
 											    <span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
@@ -168,6 +182,7 @@
 										<input type="text" ng-model="search" class="form-control" placeholder="Buscar" value=""></input>
 									</div>
 								</form>
+
 								<div class='table-responsive'>
 									{% verbatim %}
 
@@ -192,13 +207,12 @@
 
 									{% endverbatim %}
 								</div>
-							</div>
+						</div>
 
 					</div>
 				</div>
 
 </div>
-
 </body>
 
 {% block script %}
