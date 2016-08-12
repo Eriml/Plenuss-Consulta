@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="store" lang="en">
+<html ng-app="store" lang="en" style="background-color: #0094ca;"">
 
 <head>
-	<title>Avattia</title>
+	<title>Plenuss</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 
@@ -13,7 +13,7 @@
 
 </head>
 
-<body class="body" style="background-color:#f6f6f6">
+<body class="body" style="background-color: #fff;">
 	<script src="{% static 'main/js/jquery.min.js' %}"></script>
 	<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
 	<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
@@ -23,20 +23,50 @@
 	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
 
 	<style>
-	img.expand { width: 10em; }
-	@font-face {
-    font-family: 'Righteous'; /*a name to be used later*/
-    src: url('{% static 'main/fonts/Righteous.ttf' %}'); /*URL to font*/
-}
+	img.expand { 
+		width: 10em; 
+	}
+	.body{
+		background-image: url({% static 'main/pics/wmark.png' %});
+		background-position: right 20px bottom 20px;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: 25%;
+	}
+	#panel panel-primary {
+    	background-size: 200px 500px;
+	}
 
+	footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+	}
+	body {
+        background-color:#eaeaea;
+        max-width: 900px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 100px; 
+        padding-bottom: 50px;
+        padding: 100px 0px 0px 0px;
+        height:100%;
+        box-shadow: 0px 0px 2px 2px #999;
+    }
 	</style>
 
 
-	<div class="container-fluid" style="min-height:95%; " id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
+<div class="container-fluid" style="min-height:95%; " id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
 
 
   <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
+	<!--Logo Plenuss-->
 	  <div class="navbar-header">
 		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 		  <span class="sr-only">Toggle navigation</span>
@@ -44,36 +74,54 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="#"><p><img style="min-width:100px;min-height: 28px;max-width: 165px;max-height: 45px;margin-top: -10px;" src="{% static 'main/pics/Logo.png' %}"  class="img"/></p></a>
+		<a class="navbar-brand" href="#"><p><img style="min-width:100px;min-height: 28px;max-width: 165px;max-height: 45px;margin-top: -10px;" src="{% static 'main/pics/Logo.png' %}" class="img"/></p></a>
 	  </div>
+	<!--Botones de Menu-->
 	  <div id="navbar" class="navbar-collapse collapse">
 		<ul class="nav navbar-nav">
-			<li role="presentation" ng-class="{ active:tab === 1}"><a href ng-click="tab = 1">Home</a></li>
-            <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2">Profile</a></li>
-            <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3">Consulta</a></li>
+			<li role="presentation" ng-class="{ active:tab === 1}"><a href ng-click="tab = 1"><b>Home</b></a></li>
+            <li role="presentation" ng-class="{ active:tab === 2}" ><a href ng-click="tab = 2"><b>Profile</b></a></li>
+            <li role="presentation" ng-class="{ active:tab === 3}" ><a href ng-click="tab = 3"><b>Consulta</b></a></li>
 		</ul>
 		<form class="navbar-form navbar-right" action="/logout" >
 			<font style="font-family: 'Righteous';">{{user}}&nbsp;&nbsp;</font>
-           <button type="submit" class="btn btn-danger">Cerrar Sesion</button>
-         </form>
-	  </div><!--/.nav-collapse -->
+           <button type="submit" class="btn btn-danger" style="font-family: 'Calibri';padding-top: 3px; padding-bottom: 3px;">Salir</button>
+        </form>
+	  </div>
 	</div>
-  </nav>
-  	<div class="row">
-				  <center>
-				  <h3>Registro y Manejo de Informacion</h3>
-				  </center>
-		  <div class="col-md-10">
 
-				<div class='container' ng-show="tab === 1">
+  </nav>
+  	<div class="row" >
+  	<!--Texto en todas las Pestanas-->
+				  <center>
+
+				  </center>
+	<!--Pestana Home-->
+			<div class='container' ng-show="tab === 1">
 					<center>
-						<p>Something in here</p>
-					</center>
+					<p>
+					<div class="panel-group">
+  				<div class="panel panel-primary" style="text-align: center;float: left;margin-bottom: 5px;word-wrap: break-word;display:inline-block;max-width: 500px;">
+    					<div class="panel-heading" style="font-family: 'Righteous'">DATOS DE LA EMPRESA</div>
+    					<div class="panel-body" style="text-align: left;padding-left: 23px;font-family: 'Calibri';">
+    					<div ><img src="{% static 'main/pics/Empresa.jpg' %}" style="max-width:200px;height:auto;text-align: center;" id="logo" /></div>
+    					<b>EMPRESA:</b> DISTRIBUIDORA DE ALIMENTOS IBARRA S DE RL DE CV<br>
+    					<b>DIRECCION:</b> CARR SAN LUIS MOD CL 14 EJ. CUERNAVACA<br>
+    					MEXICALI, BC<br>
+    					<b>SUCURSAL:</b> CASH CARRY<br>
+    					</div>
 				</div>
+<!--
+				<div class="panel panel-primary" style="text-align: center;float: left;margin-left:1px;margin-top: 0px;margin-bottom: 5px;display:inline-block;width: 50%;float: right;">
+    					<div class="panel-heading">Panel Content</div>
+    					<div class="panel-body">Panel Content</div>-->
+				</div>
+					</center>
 			</div>
-			</div>
+
+<!--Pestana Consulta-->
 				<div ng-show="tab === 3">
-							<div class="container" id="tablas" ng-controller="ControladorFecha as control">
+					<div class="container" id="tablas" ng-controller="ControladorFecha as control">
 								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
@@ -96,10 +144,9 @@
 										</li>
 										{% endverbatim %}
   									</ul>
-
 								</div>
 
-							</div>
+						
 
 						   <div ng-controller="ControladorFecha as control" class="row">
 					       		<form name="search" id="search" ng-submit="control.search()" > {% csrf_token %}
@@ -147,13 +194,18 @@
 								</div>
 							</div>
 
+					</div>
 				</div>
-		  </div>
 
-
+</div>
 
 </body>
 
 {% block script %}
 {% endblock %}
+
+<footer>
+<div style style="font-family: 'Calibri';" >
+© 2016 Plenuss, S.A. de C.V.</div>
+</footer>
 </html>
