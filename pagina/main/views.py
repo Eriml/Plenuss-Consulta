@@ -24,6 +24,27 @@ def getData(db=None):
     conn.close()
     return result
 
+def doQuery(db,tabla,*args):
+    """ db: Database to query
+    tabla: En la cual Buscar
+    args: Columnas en las que se quiere buscar
+    """
+    conn = pymssql.connect(server,user,password, db)
+    cursor = conn.cursor()
+    cols = ",".join(args)
+    query = "select " + cols + " from dbo." +  tabla
+    cursor.execute(query)
+    result = cursor.fetchall()
+    conn.close()
+    jsonResult = {'headers':[],'data':[]}
+    [jsonResult['headers'].append(arg) for arg in args]
+    [jsonResult['data'].append({x:y for x,y in zip(args,z) })  for z in result]
+    print(jsonResult)
+    #print(result)
+    return result
+
+
+
 def getVen(dsd,hst):
     conn = pymssql.connect(server,user,password, "EjerciciosJonathan")
     cursor = conn.cursor()
@@ -47,7 +68,9 @@ def getUser(base,usuario,passw):
 # Create your views here.
 
 def index(request):
+    doQuery("EjerciciosJonathan","p_usua","usuario","password","nombre")
     if request.session.get('user'):
+        request.session['date'] = time.time()
         return render(request, 'main/home.html',{'user':request.session.get('user')})
     else:
         return render(request, 'main/auth.html',{'Error':False} )
@@ -59,6 +82,7 @@ def contact(request):
     return render(request,'main/basic.html',{'content':info,'time':result})
 
 def consulta(request):
+    request.session['date'] = time.time()
     if request.method == 'GET':
         return render(request, 'main/consulta.html')
     elif request.method == 'POST':
@@ -71,6 +95,7 @@ def consulta(request):
         #return render_to_response('main/home.html',{},RequestContext(request))
 
 def searchInfo(request):
+    request.session['date'] = time.time()
     print('No esta funcionando0')
     if request.is_ajax() and request.method == "POST":
         dsd = request.POST['desde']
@@ -93,9 +118,13 @@ def getTables(base):
     cursor = conn.cursor()
     cursor.execute('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES order by TABLE_NAME asc')
     result = cursor.fetchall()
+    result = [re.findall(r'[a-zA-Z0-9_]+',e[0]) for e in result]
+    result = [x[0] for x in result]
+    print(result)
     return result
 
 def searchTbl(request):
+    request.session['date'] = time.time()
     message = []
     if request.is_ajax() and request.method == "POST":
         message = getTables('EjerciciosJonathan')
@@ -113,6 +142,7 @@ def getColumns(table,base):
 
 def  searchColumns(request):
     message = []
+    request.session['date'] = time.time()
     if request.is_ajax() and request.method == "POST":
             message = getColumns(request.POST['tabla'],'EjerciciosJonathan')
             print(message)
@@ -128,14 +158,24 @@ def login(request):
             result = getUser('EjerciciosJonathan',user,passw)
             if result:
                 request.session['user'] = user
+                request.session['date'] = time.time()
                 request.session.set_expiry(1800)
                 return redirect("/")
             else:
                 return render(request, 'main/auth.html',{'Error':True})
 
 def logout(request):
-    del request.session['user']
+    if request.session.get('user'):
+        del request.session['user']
+    else:
+        print("No se encontro la sesion")
     return redirect("/")
 
 def formatQuerytoJson(cosulta,*agrs):
     pass
+
+def doGet(request):
+    response = HttpResponse("Queso",content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="foo.xls"'
+    return response
+    #return HttpResponse("Is working!!!")

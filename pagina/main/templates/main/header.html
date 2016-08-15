@@ -11,10 +11,10 @@
 	<link rel="stylesheet" href="{% static 'main/css/loading.css' %}" type="text/css" />
 
 	<style>
-	img.expand { 
-		width: 10em; 
+	img.expand {
+		width: 10em;
 	}
-	
+
 	#panel panel-primary {
     	background-size: 200px 500px;
 	}
@@ -62,18 +62,12 @@
 </head>
 
 <body class="body" style="padding-bottom: 100px;">
-	<script src="{% static 'main/js/jquery.min.js' %}"></script>
-	<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
-	<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/dirPagination.js' %}"></script>
-	<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
-	<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
 
 
 
 
-<div class="container-fluid" id="nav" ng-controller="StoreController as store" ng-init="tab = 1">
+
+<div class="container-fluid" id="nav"  ng-init="tab = 1">
 
 
   <nav class="navbar navbar-default navbar-fixed-top">
@@ -160,7 +154,7 @@
 								</div>
 						</div>
 
-						
+
 
 						<div ng-controller="ControladorFecha as control" class="row" style="padding-left:30px;padding-right:30px;">
 					       		<form name="search" id="search" ng-submit="control.search()" > {% csrf_token %}
@@ -181,7 +175,8 @@
 								<form class="form-inline">
 									<div class="form-group">
 										<label >Search</label>
-										<input type="text" ng-model="search" class="form-control" placeholder="Buscar" value=""></input>
+										<input ng-model="searchT" placeholder="Buscar" arial-label="Buscar">
+										<button ng-click="control.doGet()" class="btn">Do a get</button>
 									</div>
 								</form>
 
@@ -192,13 +187,13 @@
 
 										<tr>
 
-											<th><a href ng-click="control.orderP('producto')">Producto<span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a></th>
-											<th><a href ng-click="control.orderP('venta')">Venta Total</a></th>
-											<th><a href ng-click="control.orderP('cantidad')">Cantidad Vendida</a></th>
-											<th><a href ng-click="control.orderP('desc')">Descripcion</a></th>
+											<th><a href ng-click="control.orderP('producto')">Producto<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'producto'"></span></a></th>
+											<th><a href ng-click="control.orderP('venta')">Venta Total<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'venta'"></span></a></th>
+											<th><a href ng-click="control.orderP('cantidad')">Cantidad Vendida<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'cantidad'"></span></a></th>
+											<th><a href ng-click="control.orderP('desc')">Descripcion<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'desc'"></span></a></th>
 										</tr>
 
-											<tr dir-paginate="prod in result | orderBy:propertyName:reverse | filter: search  | itemsPerPage: 15"><td>{{prod.producto}}</td><td>{{prod.venta}}</td><td>{{prod.cantidad}}</td><td>{{prod.desc}}</td></tr>
+											<tr dir-paginate="prod in result | orderBy:propertyName:reverse | filter:searchT  | itemsPerPage: 15"><td>{{prod.producto}}</td><td>{{prod.venta}}</td><td>{{prod.cantidad}}</td><td>{{prod.desc}}</td></tr>
 
 									</table>
 									<dir-pagination-controls
@@ -219,7 +214,13 @@
 
 {% block script %}
 {% endblock %}
-
+<script src="{% static 'main/js/jquery.min.js' %}"></script>
+<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
+<script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
+<script  type='text/javascript' src="{% static 'main/js/dirPagination.js' %}"></script>
+<script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
+<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
 <footer>
 <div style style="font-family: 'Calibri';" >
 © 2016 Plenuss, S.A. de C.V.</div>

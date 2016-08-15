@@ -11,9 +11,12 @@ $.ajaxSetup({
         }
     }
 });
+//document.getElementsByName('buscarTa').value('');
+(function(){
+
 app = angular.module('store', ['angularUtils.directives.dirPagination']);
 
-app.controller('ControladorFecha', function($scope) {
+app.controller('ControladorFecha', function($scope,$http) {
     $scope.loading = false;
     $scope.resulttotal = []
     $scope.result = []
@@ -24,11 +27,12 @@ app.controller('ControladorFecha', function($scope) {
     $scope.selcolums = []
     $scope.propertyName = null;
     $scope.reverse = false;
+    this.searchT = '';
     $scope.config = {
         itemsPerPage: 5,
         fillLastPage: true
     }
-
+    $('#buscarTa').html('');
     this.search = function() {
         $scope.loading = true;
         var dsd = $('#desde').val();
@@ -132,36 +136,14 @@ app.controller('ControladorFecha', function($scope) {
 
     };
 
+    this.doGet = function() {
+        alert('Hi');
+        $http.get('/doGet/').then(function (result) {
+            console.log(result);
+        });
+    };
+
 
 
 });
-
-
-app.controller('StoreController', function() {
-    this.product = gem;
-
-
-    /*    this.changeTable = function(){
-            var dsd = $('#desde').val();
-            alert("hola");
-           //event.preventDefault();
-           $.ajax({
-               type: "POST",
-               url : "/searchInfo/",
-               data : { 'desde' :dsd, 'hasta': $('#desde').val() },
-               success: function(data){
-                    app.result = JSON.parse(data);
-
-                    app.lon = result.length;
-               }
-           });
-           console.log(app.result);
-       };*/
-});
-
-var gem = {
-    name: 'Dodecahedron',
-    price: 2.95,
-    description: 'This is a precious gem to do great things.',
-    canPurchase: true
-}
+})();
