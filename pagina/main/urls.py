@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^login/',views.login, name="login"),
     url(r'^logout/',views.logout, name="logout"),
     url(r'^doGet/',views.doGet, name="doGet"),
+    url(r'^drawColumns/',views.drawColumns, name="drawColumns"),
     ]
