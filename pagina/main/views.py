@@ -5,48 +5,64 @@ from os import getenv
 import pymssql
 import time
 import json
+#import simplejson as json
 import re
 
 server = "SERVERAVATTIA\AVATTIA"
 user = "sa"
 password = "aitva"
+base = "EjerciciosJonathan"
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except:
+        return False
 
-
-def getData(db=None):
+def getData():
     #conn = pymssql.connect(server, user, password, "AZTECA")
     #cursor = conn.cursor()
     #cursor.execute('SELECT * from dbo.p_clie')
-    conn = pymssql.connect(server,user,password, "FERBISBRASIL")
+    conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     cursor.execute('SELECT top 10000 * from dbo.p_vede ')
     result = cursor.fetchall()
     conn.close()
     return result
 
-def doQuery(db,tabla,*args):
+def doQuery(tabla,*args):
     """ db: Database to query
     tabla: En la cual Buscar
     args: Columnas en las que se quiere buscar
     """
-    conn = pymssql.connect(server,user,password, db)
+    conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     cols = ",".join(args)
     query = "select " + cols + " from dbo." +  tabla
     cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
-    jsonResult = {'headers':[],'data':[]}
-    [jsonResult['headers'].append(arg) for arg in args]
-    [jsonResult['data'].append({x:y for x,y in zip(args,z) })  for z in result]
+    jsonResult = []
+    #[jsonResult['headers'].append(arg) for arg in args]
+    #[jsonResult['data'].append({x:y for x,y in zip(args,z) })  for z in result]
+    for row in result:
+        dictx = {}
+        for x,y in zip(args,row):
+            print(x,y)
+            if is_number(y):
+                dictx[x] = float(y)
+            else:
+                dictx[x] = y
+        jsonResult.append(dictx)
     print(jsonResult)
     #print(result)
-    return result
+    return jsonResult
 
 
 
 def getVen(dsd,hst):
-    conn = pymssql.connect(server,user,password, "EjerciciosJonathan")
+    conn = pymssql.connect(server,user,password,base)
     cursor = conn.cursor()
     #cursor.execute('SELECT sum(dbo.p_vede.Importe) as Total,sum(dbo.p_vede.Cantidad) as Cantidad, dbo.p_vede.Producto, dbo.p_prod.desc from dbo.p_vede where fecha between '+dsd+' AND ' + hst +  )
     cursor.execute('select distinct f.producto , s.VentaTotal, s.CantidadVendida, p.desc1 from dbo.p_vede as f inner join( \
@@ -56,7 +72,7 @@ def getVen(dsd,hst):
     conn.close()
     return result
 
-def getUser(base,usuario,passw):
+def getUser(usuario,passw):
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     #cursor.execute('SELECT sum(dbo.p_vede.Importe) as Total,sum(dbo.p_vede.Cantidad) as Cantidad, dbo.p_vede.Producto, dbo.p_prod.desc from dbo.p_vede where fecha between '+dsd+' AND ' + hst +  )
@@ -68,7 +84,6 @@ def getUser(base,usuario,passw):
 # Create your views here.
 
 def index(request):
-    doQuery("EjerciciosJonathan","p_usua","usuario","password","nombre")
     if request.session.get('user'):
         request.session['date'] = time.time()
         return render(request, 'main/home.html',{'user':request.session.get('user')})
@@ -102,6 +117,7 @@ def searchInfo(request):
         hst = request.POST['hasta']
         resultado = getVen(dsd,hst)
         tab = [{'producto': x[0], 'venta': float(x[1]),'cantidad': int(x[2]) , 'desc': x[3] } for x in resultado]
+        print(tab)
         message = "Yes, AJAX!"
         #consultaTablas('EjerciciosJonathan')
         print('Aqui llego')
@@ -113,7 +129,7 @@ def consultaBase(tabla,*args):
 
     pass
 
-def getTables(base):
+def getTables():
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     cursor.execute('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES order by TABLE_NAME asc')
@@ -127,10 +143,10 @@ def searchTbl(request):
     request.session['date'] = time.time()
     message = []
     if request.is_ajax() and request.method == "POST":
-        message = getTables('EjerciciosJonathan')
+        message = getTables()
     return HttpResponse(json.dumps(message))
 
-def getColumns(table,base):
+def getColumns(table):
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     print(table)
@@ -144,7 +160,7 @@ def  searchColumns(request):
     message = []
     request.session['date'] = time.time()
     if request.is_ajax() and request.method == "POST":
-            message = getColumns(request.POST['tabla'],'EjerciciosJonathan')
+            message = getColumns(request.POST['tabla'])
             print(message)
             message = [re.findall(r'[a-zA-Z0-9_]+',e[0]) for e in message]
             message = [x[0] for x in message]
@@ -155,7 +171,7 @@ def login(request):
     if request.method == "POST":
             user = request.POST['usuario']
             passw = request.POST['pass']
-            result = getUser('EjerciciosJonathan',user,passw)
+            result = getUser(user,passw)
             if result:
                 request.session['user'] = user
                 request.session['date'] = time.time()
@@ -179,3 +195,13 @@ def doGet(request):
     response['Content-Disposition'] = 'attachment; filename="foo.xls"'
     return response
     #return HttpResponse("Is working!!!")
+
+def drawColumns(request):
+    result = {};
+    if request.method == 'POST' and request.is_ajax():
+        columns = request.POST.getlist('columns[]')
+        tabla = request.POST.get('tabla')
+        result = doQuery(tabla,*columns)
+        print("Taht workd")
+    #return JsonResponse(result,safe=False)
+    return HttpResponse(json.dumps(result))
