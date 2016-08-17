@@ -48,3 +48,4 @@ Temporary Items
 *.sqlite3
 pagina/db.sqlite3
 pagina/db.sqlite3
+pagina/main/templates/main/header.html
