@@ -127,8 +127,8 @@
 			</div>
 
 <!--Pestana Consulta-->
-				<div ng-show="tab === 3" style="max-width: 100%;">
-					<div class="container" id="tablas" ng-controller="ControladorFecha as control" style="max-width: 100%;">
+				<div ng-show="tab === 3" style="max-width: 100%;"  ng-controller="ControladorFecha as control">
+					<div class="container" id="tablas" style="max-width: 100%;">
 								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
@@ -145,7 +145,7 @@
   									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										{% verbatim %}
 										<li ng-repeat="column in columns" class="tableColumn">
-											<input  type="checkbox"  value="{{column}}">
+											<input  type="checkbox"  value="{{column}}" ng-click="control.toggleColumn(column)">
 	    										{{column}}
 			  								</input>
 										</li>
@@ -156,7 +156,7 @@
 
 
 
-						<div ng-controller="ControladorFecha as control" class="row" style="padding-left:30px;padding-right:30px;">
+						<div  class="row" style="padding-left:30px;padding-right:30px;">
 					       		<form name="search" id="search" ng-submit="control.search()" > {% csrf_token %}
 								  	<div class="form-group col-md-4">
 					                	<label for="desde">Desde:</label>
@@ -176,7 +176,7 @@
 									<div class="form-group">
 										<label >Search</label>
 										<input ng-model="searchT" placeholder="Buscar" arial-label="Buscar">
-										<button ng-click="control.doGet()" class="btn">Do a get</button>
+										<button ng-click="control.drawTable()" class="btn">Do a get</button>
 									</div>
 								</form>
 
