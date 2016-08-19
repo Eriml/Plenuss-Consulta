@@ -12,7 +12,7 @@ server = "SERVERAVATTIA\AVATTIA"
 user = "sa"
 password = "aitva"
 base = "EjerciciosJonathan"
-
+#Helper Functions
 def is_number(s):
     try:
         float(s)
@@ -20,6 +20,17 @@ def is_number(s):
     except:
         return False
 
+data_handler = lambda obj :(
+    obj.isoformat()
+    if isinstance(obj, datetime.datetime)
+    or isinstance(obj, datetime.date)
+    else None
+)
+
+'''
+
+'''
+#End of helper functions
 def getData():
     #conn = pymssql.connect(server, user, password, "AZTECA")
     #cursor = conn.cursor()
@@ -40,6 +51,7 @@ def doQuery(tabla,*args):
     cursor = conn.cursor()
     cols = ",".join(args)
     query = "select " + cols + " from dbo." +  tabla
+    print(query)
     cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
@@ -50,8 +62,12 @@ def doQuery(tabla,*args):
         dictx = {}
         for x,y in zip(args,row):
             print(x,y)
+            print(type(y))
             if is_number(y):
                 dictx[x] = float(y)
+            elif type(y).__name__ == 'datetime':
+                #dictx[x] = y[0]+"-"+y[1]+"-"+y[2]
+                print(y)
             else:
                 dictx[x] = y
         jsonResult.append(dictx)
@@ -201,6 +217,7 @@ def drawColumns(request):
     if request.method == 'POST' and request.is_ajax():
         columns = request.POST.getlist('columns[]')
         tabla = request.POST.get('tabla')
+        print(columns)
         result = doQuery(tabla,*columns)
         print("Taht workd")
     #return JsonResponse(result,safe=False)
