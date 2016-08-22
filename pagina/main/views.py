@@ -5,13 +5,13 @@ from os import getenv
 import pymssql
 import time
 import json
-#import simplejson as json
 import re
 
 server = "SERVERAVATTIA\AVATTIA"
 user = "sa"
 password = "aitva"
 base = "EjerciciosJonathan"
+
 #Helper Functions
 def is_number(s):
     try:
@@ -26,15 +26,10 @@ data_handler = lambda obj :(
     or isinstance(obj, datetime.date)
     else None
 )
-
-'''
-
-'''
 #End of helper functions
+
+
 def getData():
-    #conn = pymssql.connect(server, user, password, "AZTECA")
-    #cursor = conn.cursor()
-    #cursor.execute('SELECT * from dbo.p_clie')
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     cursor.execute('SELECT top 10000 * from dbo.p_vede ')
@@ -66,13 +61,11 @@ def doQuery(tabla,*args):
             if is_number(y):
                 dictx[x] = float(y)
             elif type(y).__name__ == 'datetime':
-                #dictx[x] = y[0]+"-"+y[1]+"-"+y[2]
                 print(y)
             else:
                 dictx[x] = y
         jsonResult.append(dictx)
     print(jsonResult)
-    #print(result)
     return jsonResult
 
 
@@ -123,26 +116,17 @@ def consulta(request):
         resulta  = getVen(dsd,hst)
         start = time.time()-start
         return render(request,'main/consulta.html',{'fch': [dsd ,hst],'result':resulta,'tiempo':start})
-        #return render_to_response('main/home.html',{},RequestContext(request))
 
 def searchInfo(request):
     request.session['date'] = time.time()
-    print('No esta funcionando0')
     if request.is_ajax() and request.method == "POST":
         dsd = request.POST['desde']
         hst = request.POST['hasta']
         resultado = getVen(dsd,hst)
         tab = [{'producto': x[0], 'venta': float(x[1]),'cantidad': int(x[2]) , 'desc': x[3] } for x in resultado]
-        print(tab)
-        message = "Yes, AJAX!"
-        #consultaTablas('EjerciciosJonathan')
-        print('Aqui llego')
-    else:
-        message = "Not Ajax"
     return HttpResponse(json.dumps(tab))
 
 def consultaBase(tabla,*args):
-
     pass
 
 def getTables():
