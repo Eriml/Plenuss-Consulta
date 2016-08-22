@@ -61,7 +61,7 @@ def doQuery(tabla,*args):
             if is_number(y):
                 dictx[x] = float(y)
             elif type(y).__name__ == 'datetime':
-                print(y)
+                dictx[x] = json.dumps(y,default=data_handler)
             else:
                 dictx[x] = y
         jsonResult.append(dictx)
@@ -73,7 +73,6 @@ def doQuery(tabla,*args):
 def getVen(dsd,hst):
     conn = pymssql.connect(server,user,password,base)
     cursor = conn.cursor()
-    #cursor.execute('SELECT sum(dbo.p_vede.Importe) as Total,sum(dbo.p_vede.Cantidad) as Cantidad, dbo.p_vede.Producto, dbo.p_prod.desc from dbo.p_vede where fecha between '+dsd+' AND ' + hst +  )
     cursor.execute('select distinct f.producto , s.VentaTotal, s.CantidadVendida, p.desc1 from dbo.p_vede as f inner join( \
         select producto, sum(importe) as VentaTotal, sum(cantidad) as CantidadVendida from dbo.p_vede where fecha >= \''+dsd+'\' and fecha <= \''+hst+'\' group by producto \
         ) as s on f.producto = s.producto  inner join p_prod as p on p.producto = f.producto')
@@ -84,7 +83,6 @@ def getVen(dsd,hst):
 def getUser(usuario,passw):
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
-    #cursor.execute('SELECT sum(dbo.p_vede.Importe) as Total,sum(dbo.p_vede.Cantidad) as Cantidad, dbo.p_vede.Producto, dbo.p_prod.desc from dbo.p_vede where fecha between '+dsd+' AND ' + hst +  )
     cursor.execute('SELECT usuario , estatus, tipo ,  identifica FROM p_usua WHERE usuario = \''+ usuario+ "' AND password = '"+ passw + "'"  )
     result = cursor.fetchone()
     conn.close()
