@@ -23,7 +23,7 @@ app.controller('ControladorFecha', function($scope,$http) {
     $scope.tam = $scope.result.length;
     $scope.op = 1;
     $scope.columns = []
-    this.selcolums = {value : []}
+    $scope.selcolums = {value : []}
     $scope.propertyName = null;
     $scope.reverse = false;
     this.searchT = '';
@@ -115,6 +115,7 @@ app.controller('ControladorFecha', function($scope,$http) {
 
     this.searchColumns = function() {
         var tabla = $("#tablaSel").val();
+         $scope.selcolums.value = []
         $.ajax({
             type: "POST",
             url: "/searchColumns/",
@@ -146,38 +147,38 @@ app.controller('ControladorFecha', function($scope,$http) {
     //Function to toggle the checkboxs to see what were the seleted columns to show.
     this.toggleColumn = function(column){
         console.log(column);
-        if((index = $.inArray(column,this.selcolums.value))>=0){
+        if((index = $.inArray(column,$scope.selcolums.value))>=0){
             //$scope.$apply(function(){
-                 this.selcolums.value.splice(index,1);
+                 $scope.selcolums.value.splice(index,1);
             //});
         }
         else {
             //$scope.$apply(function(){
-                 this.selcolums.value.push(column);
+                $scope.selcolums.value.push(column);
             //});
 
             console.log("Se inserto el " + column);
         }
-        console.log(this.selcolums);
+        console.log($scope.selcolums);
     };
     this.drawTable = function(){
         //$scope.loading = true;
-        console.log(this.selcolums);
+        console.log($scope.selcolums);
         $.ajax({
             type: "POST",
             url: "/drawColumns/",
             data: {
                 'tabla': $("#tablaSel").val(),
-                'columns[]': this.selcolums.value,
+                'columns[]': $scope.selcolums.value,
             },
             success: function(data1) {
-                //$scope.$apply(function() {
                         console.log("queso");
+                        $scope.$apply(function(){
                         $scope.tableData = JSON.parse(data1);
+                    });
                         console.log($scope.tableData);
                         //$scope.tam = $scope.tableData.data;
                         $scope.loading = false;
-                //});
             },
             error: function(data) {
                 alert("Error inesperado");
@@ -188,5 +189,19 @@ app.controller('ControladorFecha', function($scope,$http) {
 
 
 
+});
+
+app.directive('dynTable',function(){
+    return {
+        template: "<div class='table-responsive'>"+
+        "<table class='table'>"+
+            "<tr>"+
+                "<th ng-repeat='header in selcolums.value'><a href ng-click='control.orderP(header)'>{{header}}<span class='glyphicon glyphicon-sort' ng-show='propertyName === header'></span></a></th>"+
+            "</tr>"+
+                "<tr dir-paginate='result in tableData | orderBy:propertyName:reverse | filter:searchT | itemsPerPage: 15'><td ng-repeat='header in selcolums.value'>{{result[header]}}</td></tr>"+
+        "</table>"+
+        "<dir-pagination-controls max-size='5' direction-links='true' boundary-links='true' ></dir-pagination-controls>"+
+    "</div>"
+};
 });
 })();

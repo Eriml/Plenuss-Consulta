@@ -6,6 +6,7 @@ import pymssql
 import time
 import json
 import re
+import datetime
 
 server = "SERVERAVATTIA\AVATTIA"
 user = "sa"
@@ -20,7 +21,7 @@ def is_number(s):
     except:
         return False
 
-data_handler = lambda obj :(
+date_handler = lambda obj :(
     obj.isoformat()
     if isinstance(obj, datetime.datetime)
     or isinstance(obj, datetime.date)
@@ -61,7 +62,8 @@ def doQuery(tabla,*args):
             if is_number(y):
                 dictx[x] = float(y)
             elif type(y).__name__ == 'datetime':
-                dictx[x] = json.dumps(y,default=data_handler)
+                #dictx[x] = json.dumps(y,default=date_handler)
+                dictx[x] = y
             else:
                 dictx[x] = y
         jsonResult.append(dictx)
@@ -203,4 +205,4 @@ def drawColumns(request):
         result = doQuery(tabla,*columns)
         print("Taht workd")
     #return JsonResponse(result,safe=False)
-    return HttpResponse(json.dumps(result))
+    return HttpResponse(json.dumps(result,default=date_handler))
