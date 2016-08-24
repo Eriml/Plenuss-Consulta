@@ -17,22 +17,20 @@ app = angular.module('store', ['angularUtils.directives.dirPagination']);
 
 app.controller('ControladorFecha', function($scope,$http) {
     $scope.loading = false;
-    $scope.resulttotal = []
     $scope.result = []
     $scope.tablas = []
     $scope.tam = $scope.result.length;
-    $scope.op = 1;
     $scope.columns = []
     $scope.selcolums = {value : []}
     $scope.propertyName = null;
     $scope.reverse = false;
-    this.searchT = '';
+    //this.searchT = '';
     $scope.tableData = {};
     $scope.config = {
         itemsPerPage: 5,
         fillLastPage: true
     }
-    $('#buscarTa').html('');
+    //We are going to erase function search
     this.search = function() {
         $scope.loading = true;
         var dsd = $('#desde').val();
@@ -49,10 +47,9 @@ app.controller('ControladorFecha', function($scope,$http) {
             },
             success: function(data) {
                 $scope.$apply(function() {
-                    $scope.resulttotal = JSON.parse(data).sort(function(a, b) {
+                    $scope.result = JSON.parse(data).sort(function(a, b) {
                         return a['producto'].localeCompare(b['producto'])
                     });
-                    $scope.result = $scope.resulttotal;
                     $scope.tam = $scope.result.length;
                     $scope.loading = false;
                     $("#btnSearch").removeAttr("disabled");
@@ -72,17 +69,9 @@ app.controller('ControladorFecha', function($scope,$http) {
 
     this.orderP = function(propertyName) {
         //Ordena las cosas por medio de alfabetico en la tabla
+        //This is going to be part of the object dynTable
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
         $scope.propertyName = propertyName;
-        /*    if($scope.op == 1){
-                        $scope.op = 0 ;
-                $scope.result = $scope.result.sort(function(a,b){return b['producto'].localeCompare(a['producto'])});
-        }
-        else{
-                    $scope.op = 1 ;
-
-            $scope.result = $scope.result.sort(function(a,b){return a['producto'].localeCompare(b['producto'])});
-        } */
     };
 
 
@@ -133,10 +122,6 @@ app.controller('ControladorFecha', function($scope,$http) {
         });
     };
 
-    this.getRows = function() {
-
-    };
-
     this.doGet = function() {
         alert('Hi');
         $http.get('/doGet/').then(function (result) {
@@ -148,21 +133,15 @@ app.controller('ControladorFecha', function($scope,$http) {
     this.toggleColumn = function(column){
         console.log(column);
         if((index = $.inArray(column,$scope.selcolums.value))>=0){
-            //$scope.$apply(function(){
                  $scope.selcolums.value.splice(index,1);
-            //});
         }
         else {
-            //$scope.$apply(function(){
                 $scope.selcolums.value.push(column);
-            //});
-
             console.log("Se inserto el " + column);
         }
         console.log($scope.selcolums);
     };
     this.drawTable = function(){
-        //$scope.loading = true;
         console.log($scope.selcolums);
         $.ajax({
             type: "POST",
@@ -171,18 +150,14 @@ app.controller('ControladorFecha', function($scope,$http) {
                 'tabla': $("#tablaSel").val(),
                 'columns[]': $scope.selcolums.value,
             },
-            success: function(data1) {
-                        console.log("queso");
+            success: function(data) {
                         $scope.$apply(function(){
-                        $scope.tableData = JSON.parse(data1);
+                        $scope.tableData = JSON.parse(data);
                     });
                         console.log($scope.tableData);
-                        //$scope.tam = $scope.tableData.data;
-                        $scope.loading = false;
             },
             error: function(data) {
                 alert("Error inesperado");
-                $scope.loading = false;
             }
         });
     };
@@ -198,7 +173,7 @@ app.directive('dynTable',function(){
             "<tr>"+
                 "<th ng-repeat='header in selcolums.value'><a href ng-click='control.orderP(header)'>{{header}}<span class='glyphicon glyphicon-sort' ng-show='propertyName === header'></span></a></th>"+
             "</tr>"+
-                "<tr dir-paginate='result in tableData | orderBy:propertyName:reverse | filter:searchT | itemsPerPage: 15'><td ng-repeat='header in selcolums.value'>{{result[header]}}</td></tr>"+
+                "<tr dir-paginate='result in tableData | orderBy:propertyName:reverse | filter:searchT | itemsPerPage: 10'><td ng-repeat='header in selcolums.value'>{{result[header]}}</td></tr>"+
         "</table>"+
         "<dir-pagination-controls max-size='5' direction-links='true' boundary-links='true' ></dir-pagination-controls>"+
     "</div>"
