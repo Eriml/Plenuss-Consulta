@@ -102,8 +102,10 @@ app.controller('ControladorFecha', function($scope,$http) {
         });
     };
 
-    this.searchColumns = function() {
-        var tabla = $("#tablaSel").val();
+    this.searchColumns = function(Tabla) {
+        //var tabla = $("#tablaSel").val();
+        var tabla = Tabla;
+        alert(tabla);
          $scope.selcolums.value = []
         $.ajax({
             type: "POST",
@@ -179,4 +181,6 @@ app.directive('dynTable',function(){
     "</div>"
 };
 });
+
+
 })();

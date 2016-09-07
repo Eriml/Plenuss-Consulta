@@ -103,7 +103,7 @@
 
 				  </center>
 	<!--Pestana Home-->
-			<div class='container' ng-show="tab === 1" style="padding-left: 30px;padding-right:30px;max-width: 100%;">
+			<div class='container' ng-show="tab === 1" style="padding-left: 30px;padding-right:30px;max-width: 100%;" ng-cloak>
 				<div class="panel-group" >
   					<div class="panel panel-primary" style="text-align: center;float: left;margin-bottom: 5px;word-wrap: break-word;display:inline-block;max-width: 500px;">
     					<div class="panel-heading" style="font-family: 'Righteous'">
@@ -128,15 +128,15 @@
 
 <!--Pestana Consulta-->
 				<div ng-show="tab === 3" style="max-width: 100%;"  ng-controller="ControladorFecha as control">
-					<div class="container" id="tablas" style="max-width: 100%;">
+					<div class="container" id="tablas" style="max-width: 100%;" ng-cloak>
 								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
 
-								<select class="form-control" ng-show="tablas.length"  id="tablaSel">
-									<option ng-repeat="tab in tablas">{% verbatim %}{{tab}}{% endverbatim %}</option>
+								<select class="form-control" ng-show="tablas.length" ng-options=" x for x in tablas" ng-model="tablaSel">
+									<!--<option ng-repeat="tab in tablas">{% verbatim %}{{tab}}{% endverbatim %}</option> -->
 								</select>
-								<button ng-click="control.searchColumns()" class='btn btn-success' ng-show="tablas.length">Buscar Columnas</button>
+								<button ng-click="control.searchColumns(tablaSel)" class='btn btn-success' ng-show="tablas.length">Buscar Columnas</button>
 								<div class="dropdown checkbox" ng-show="columns.length">
   									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     								 	Seleccione las columnas
