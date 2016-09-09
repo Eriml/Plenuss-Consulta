@@ -22,10 +22,19 @@ app.controller('ControladorFecha', function($scope,$http) {
     $scope.tam = $scope.result.length;
     $scope.columns = []
     $scope.selcolums = {value : []}
-    $scope.propertyName = null;
+    $scope.propertyName = '';
     $scope.reverse = false;
     //this.searchT = '';
-    $scope.tableData = {};
+    $scope.tableData = {
+      headers: [],
+      data: [],
+      propertyName: '',
+      reverse: false,
+      orderBy: function(propertyName) {
+        this.reverse = (this.propertyName === propertyName) ? !this.reverse : false;
+        this.propertyName = propertyName;
+      }
+    };
     $scope.config = {
         itemsPerPage: 5,
         fillLastPage: true
@@ -115,6 +124,7 @@ app.controller('ControladorFecha', function($scope,$http) {
             },
             success: function(data) {
                 $scope.$apply(function() {
+                    $scope.tableData.headers = [];
                     $scope.columns = JSON.parse(data);
                 });
             },
@@ -134,27 +144,27 @@ app.controller('ControladorFecha', function($scope,$http) {
     //Function to toggle the checkboxs to see what were the seleted columns to show.
     this.toggleColumn = function(column){
         console.log(column);
-        if((index = $.inArray(column,$scope.selcolums.value))>=0){
-                 $scope.selcolums.value.splice(index,1);
+        if((index = $.inArray(column,$scope.tableData.headers))>=0){
+                 $scope.tableData.headers.splice(index,1);
         }
         else {
-                $scope.selcolums.value.push(column);
+                $scope.tableData.headers.push(column);
             console.log("Se inserto el " + column);
         }
         console.log($scope.selcolums);
     };
-    this.drawTable = function(){
-        console.log($scope.selcolums);
+    this.drawTable = function(tabla){
+        console.log($scope.tableData.headers);
         $.ajax({
             type: "POST",
             url: "/drawColumns/",
             data: {
-                'tabla': $("#tablaSel").val(),
-                'columns[]': $scope.selcolums.value,
+                'tabla': tabla,
+                'columns[]': $scope.tableData.headers,
             },
             success: function(data) {
                         $scope.$apply(function(){
-                        $scope.tableData = JSON.parse(data);
+                          $scope.tableData.data = JSON.parse(data);
                     });
                         console.log($scope.tableData);
             },

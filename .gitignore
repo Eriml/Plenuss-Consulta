@@ -49,3 +49,7 @@ Temporary Items
 pagina/db.sqlite3
 pagina/db.sqlite3
 pagina/main/templates/main/header.html
+pagina/db.sqlite3
+*.pyc
+pagina/db.sqlite3
+*.sqlite3

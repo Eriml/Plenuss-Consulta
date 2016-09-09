@@ -43,10 +43,12 @@ def doQuery(tabla,*args):
     tabla: En la cual Buscar
     args: Columnas en las que se quiere buscar
     """
+    print(args)
     conn = pymssql.connect(server,user,password, base)
     cursor = conn.cursor()
     cols = ",".join(args)
-    query = "select " + cols + " from dbo." +  tabla
+    print(cols)
+    query = "select " + str(cols) + " from dbo." +  str(tabla)
     print(query)
     cursor.execute(query)
     result = cursor.fetchall()

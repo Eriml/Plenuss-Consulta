@@ -176,10 +176,10 @@
 									<div class="form-group">
 										<label >Search</label>
 										<input ng-model="searchT" placeholder="Buscar" arial-label="Buscar">
-										<button ng-click="control.drawTable()" class="btn">Do a get</button>
+										<button ng-click="control.drawTable(tablaSel)" class="btn">Do a get</button>
 									</div>
 								</form>
-
+								<dynamic-table table-data="tableData"></dynamic-table>
 							<!--	<div class='table-responsive'>
 									{% verbatim %}
 
@@ -204,8 +204,8 @@
 
 									{% endverbatim %}
 								</div>
-								-->
-								<div dyn-table></div>
+
+								<div dyn-table></div> -->
 						</div>
 
 					</div>

@@ -1,0 +1,19 @@
+<div class='table-responsive'>
+  Cosa
+  <form>
+  <input ng-model="search" placeholder="Buscar" arial-label="Buscar"/>
+</form>
+    <table class="table" ng-show="tableData.data.length !== 0 ">
+      <tr>
+        <th ng-repeat="header in tableData.headers"><a href  ng-click="tableData.orderBy(header)">{{ header }}<span class="glyphicon glyphicon-sort" ng-show="tableData.propertyName === header"></span></a></th>
+      </tr>
+
+        <tr dir-paginate="row in tableData.data | orderBy: tableData.propertyName:tableData.reverse | filter:search | itemsPerPage : 5 "><td ng-repeat="header in tableData.headers">{{ row[header] }}</td></tr>
+
+    </table>
+     <dir-pagination-controls
+          max-size="5"
+          direction-links="true"
+          boundary-links="true" >
+      </dir-pagination-controls>
+  </div>
