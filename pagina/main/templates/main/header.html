@@ -129,15 +129,13 @@
 <!--Pestana Consulta-->
 				<div ng-show="tab === 3" style="max-width: 100%;"  ng-controller="ControladorFecha as control">
 					<div class="container" id="tablas" style="max-width: 100%;" ng-cloak>
-								<button ng-click="control.searchTab()" class="btn btn-default" id='btnTbl'><span id="btnTextTbl">Buscar Tablas</span>
+								<button ng-click="control.searchTabA()" class="btn btn-default" id='btnTbl' ng-disabled="loading"><span id="btnTextTbl">Buscar Tablas</span>{% csrf_token %}
 										<span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 								</button>
 
-								<select class="form-control" ng-show="tablas.length" ng-options=" x for x in tablas" ng-model="tablaSel">
-									<!--<option ng-repeat="tab in tablas">{% verbatim %}{{tab}}{% endverbatim %}</option> -->
-								</select>
-								<button ng-click="control.searchColumns(tablaSel)" class='btn btn-success' ng-show="tablas.length">Buscar Columnas</button>
-								<div class="dropdown checkbox" ng-show="columns.length">
+								<select class="form-control" ng-show="tablas.length" ng-options=" x for x in tablas" ng-model="tablaSel"></select>
+								<button ng-click="control.searchColumns(tablaSel)" class='btn btn-success' ng-show="tablas.length && tablaSel != undefined " >Buscar Columnas</button>
+								<div class="dropdown checkbox" ng-show="columns.length && tablaSel == tabla">
   									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     								 	Seleccione las columnas
     					 				<span class="caret"></span>
@@ -163,9 +161,6 @@
 					                	<input type="date" class="form-control" id="desde" required/>
 					                	<label for="hasta">Hasta:</label>
 					                	<input type="date" class="form-control" id="hasta" required/>
-					                	<br>
-										<input type="file" accept="image/*;capture=camera">
-										<br>
 					                	<button type="submit" class="btn btn-default" id='btnSearch'><span id="btnText">Buscar Tablas</span>
 											    <span class="glyphicon glyphicon-refresh spinning" id="searchIcon" ng-show="loading"></span>
 										</button>
@@ -180,32 +175,6 @@
 									</div>
 								</form>
 								<dynamic-table table-data="tableData"></dynamic-table>
-							<!--	<div class='table-responsive'>
-									{% verbatim %}
-
-									<table class="table" ng-show="tam !== 0 ">
-
-										<tr>
-
-											<th><a href ng-click="control.orderP('producto')">Producto<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'producto'"></span></a></th>
-											<th><a href ng-click="control.orderP('venta')">Venta Total<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'venta'"></span></a></th>
-											<th><a href ng-click="control.orderP('cantidad')">Cantidad Vendida<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'cantidad'"></span></a></th>
-											<th><a href ng-click="control.orderP('desc')">Descripcion<span class="glyphicon glyphicon-sort" ng-show="propertyName === 'desc'"></span></a></th>
-										</tr>
-
-											<tr dir-paginate="prod in result | orderBy:propertyName:reverse | filter:searchT  | itemsPerPage: 15"><td>{{prod.producto}}</td><td>{{prod.venta}}</td><td>{{prod.cantidad}}</td><td>{{prod.desc}}</td></tr>
-
-									</table>
-									<dir-pagination-controls
-       									max-size="5"
-       									direction-links="true"
-       									boundary-links="true" >
-    								</dir-pagination-controls>
-
-									{% endverbatim %}
-								</div>
-
-								<div dyn-table></div> -->
 						</div>
 
 					</div>
@@ -221,8 +190,9 @@
 <script type='text/javascript' src="{% static 'main/js/angular.min.js' %}"></script>
 <script  type='text/javascript' src="{% static 'main/js/js.cookie.js' %}"></script>
 <script  type='text/javascript' src="{% static 'main/js/dirPagination.js' %}"></script>
+<script  type='text/javascript' src="{% static 'main/js/Biblioteca.js' %}"></script>
 <script type='text/javascript' src="{% static 'main/js/app.js' %}"></script>
-<script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script>
+<!-- <script  type='text/javascript' src="{% static 'main/js/data.js' %}"></script> -->
 <footer>
 <div style style="font-family: 'Calibri';" >
 © 2016 Plenuss, S.A. de C.V.</div>
