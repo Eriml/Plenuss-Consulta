@@ -1,5 +1,5 @@
 var csrftoken = Cookies.get('csrftoken');
-
+Cookies.set('XSRF-TOKEN',csrftoken);
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -13,9 +13,13 @@ $.ajaxSetup({
 });
 (function(){
 
-app = angular.module('store', ['angularUtils.directives.dirPagination']);
+app = angular.module('store', ['angularUtils.directives.dirPagination','biblioteca']);
 
 app.controller('ControladorFecha', function($scope,$http) {
+     //Headers for the http so it works with Angular and Django
+    $http.defaults.xsrfCookieName = 'csrftoken';
+    $http.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $scope.tabla = '';
     $scope.loading = false;
     $scope.result = []
     $scope.tablas = []
@@ -24,16 +28,15 @@ app.controller('ControladorFecha', function($scope,$http) {
     $scope.selcolums = {value : []}
     $scope.propertyName = '';
     $scope.reverse = false;
-    //this.searchT = '';
     $scope.tableData = {
-      headers: [],
-      data: [],
-      propertyName: '',
-      reverse: false,
-      orderBy: function(propertyName) {
-        this.reverse = (this.propertyName === propertyName) ? !this.reverse : false;
-        this.propertyName = propertyName;
-      }
+          headers: [],
+          data: [],
+          propertyName: '',
+          reverse: false,
+          orderBy: function(propertyName) {
+               this.reverse = (this.propertyName === propertyName) ? !this.reverse : false;
+               this.propertyName = propertyName;
+          }
     };
     $scope.config = {
         itemsPerPage: 5,
@@ -43,10 +46,8 @@ app.controller('ControladorFecha', function($scope,$http) {
     this.search = function() {
         $scope.loading = true;
         var dsd = $('#desde').val();
-        $("#btnSearch").attr("disabled", '');
         $("#btnText").html("Buscando");
         //event.preventDefault();
-
         $.ajax({
             type: "POST",
             url: "/searchInfo/",
@@ -74,6 +75,27 @@ app.controller('ControladorFecha', function($scope,$http) {
 
         return false;
 
+    };
+    this.seachA = function () {
+      $scope.loading = true;
+      $http({
+        method: 'POST',
+        url: '/searchInfo/'
+      }).then(function successCallback(response) {
+        $scope.result = JSON.parse(data).sort(function(a, b) {
+            return a['producto'].localeCompare(b['producto'])
+        });
+        $scope.tam = $scope.result.length;
+        $scope.loading = false;
+        $("#btnText").html("Buscar");
+        // this callback will be called asynchronously
+        // when the response is available
+      }, function errorCallback(response) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        $scope.loading = false;
+        $("#btnText").html("Buscar");
+      });
     };
 
     this.orderP = function(propertyName) {
@@ -110,22 +132,53 @@ app.controller('ControladorFecha', function($scope,$http) {
             }
         });
     };
+    this.searchTabA = function() {
+        $scope.loading = true;
+        $("#btnTextTbl").html('Buscando');
+        //This one is not ajax in Django.
+        //Use method to call the method.
+        //Returned data is made to JSON alone
+
+        $http({
+               method: 'GET',
+               //url: '/searchTbl/'
+               url: 'http://201.143.65.206:9111/tables'
+        }).then(function successCallback(data) {
+               console.log(data);
+               $scope.tablas = data.data
+               $("#btnTextTbl").html('Buscar');
+               $scope.loading = false;
+               // this callback will be called asynchronously
+               // when the response is available
+        }, function errorCallback(response) {
+             // called asynchronously if an error occurs
+             // or server returns response with an error status.
+             $scope.loading = false;
+             $("#btnTextTbl").html('Buscar');
+             alert('Error inesperado');
+        });
+    };
+
+
 
     this.searchColumns = function(Tabla) {
-        //var tabla = $("#tablaSel").val();
-        var tabla = Tabla;
-        alert(tabla);
-         $scope.selcolums.value = []
+        $scope.tabla = Tabla;
+        alert($scope.tabla);
+        $scope.selcolums.value = [];
+        $scope.tableData.headers = [];
         $.ajax({
-            type: "POST",
-            url: "/searchColumns/",
-            data: {
-                'tabla': tabla
-            },
+             type: "POST",
+             //url: "/searchColumns/",
+             url: 'http://201.143.65.206:9111/tables',
+             data: {
+                 'tabla': Tabla
+           },
             success: function(data) {
                 $scope.$apply(function() {
-                    $scope.tableData.headers = [];
-                    $scope.columns = JSON.parse(data);
+                     $scope.tableData.headers = [];
+                     console.log(data);
+            //         $scope.columns = JSON.parse(data);
+            $scope.columns = data;
                 });
             },
             error: function(data) {
@@ -151,20 +204,21 @@ app.controller('ControladorFecha', function($scope,$http) {
                 $scope.tableData.headers.push(column);
             console.log("Se inserto el " + column);
         }
-        console.log($scope.selcolums);
+        console.log($scope.tableData.headers);
     };
     this.drawTable = function(tabla){
         console.log($scope.tableData.headers);
         $.ajax({
             type: "POST",
-            url: "/drawColumns/",
+            url: "http://201.143.65.206:9111/tables/columns",
             data: {
                 'tabla': tabla,
                 'columns[]': $scope.tableData.headers,
             },
             success: function(data) {
                         $scope.$apply(function(){
-                          $scope.tableData.data = JSON.parse(data);
+                            console.log(data);
+                          $scope.tableData.data = data.data;
                     });
                         console.log($scope.tableData);
             },
@@ -177,20 +231,5 @@ app.controller('ControladorFecha', function($scope,$http) {
 
 
 });
-
-app.directive('dynTable',function(){
-    return {
-        template: "<div class='table-responsive'>"+
-        "<table class='table'>"+
-            "<tr>"+
-                "<th ng-repeat='header in selcolums.value'><a href ng-click='control.orderP(header)'>{{header}}<span class='glyphicon glyphicon-sort' ng-show='propertyName === header'></span></a></th>"+
-            "</tr>"+
-                "<tr dir-paginate='result in tableData | orderBy:propertyName:reverse | filter:searchT | itemsPerPage: 10'><td ng-repeat='header in selcolums.value'>{{result[header]}}</td></tr>"+
-        "</table>"+
-        "<dir-pagination-controls max-size='5' direction-links='true' boundary-links='true' ></dir-pagination-controls>"+
-    "</div>"
-};
-});
-
 
 })();

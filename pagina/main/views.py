@@ -1,5 +1,6 @@
 from django.shortcuts import render , redirect
 from django.http import HttpResponseRedirect , HttpResponse ,JsonResponse
+from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.core import serializers
 from os import getenv
 import pymssql
@@ -144,8 +145,9 @@ def getTables():
 def searchTbl(request):
     request.session['date'] = time.time()
     message = []
-    if request.is_ajax() and request.method == "POST":
+    if request.method == "POST":
         message = getTables()
+    print(message)
     return HttpResponse(json.dumps(message))
 
 def getColumns(table):
@@ -199,7 +201,7 @@ def doGet(request):
     #return HttpResponse("Is working!!!")
 
 def drawColumns(request):
-    result = {};
+    result = {}
     if request.method == 'POST' and request.is_ajax():
         columns = request.POST.getlist('columns[]')
         tabla = request.POST.get('tabla')
